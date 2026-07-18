@@ -1,14 +1,53 @@
 from rest_framework import serializers
 
-from core.sessions import session_choices
-
-from .models import Grade, Result
+from .models import Grade, Result, Session
 from .services.grading import compute_grade, compute_percentage
 
 
 class AuditFieldsMixin(serializers.ModelSerializer):
     created_by_email = serializers.EmailField(source="created_by.email", read_only=True)
     updated_by_email = serializers.EmailField(source="updated_by.email", read_only=True)
+
+
+def validate_session_name(value):
+    if not Session.objects.filter(name=value).exists():
+        valid = ", ".join(Session.objects.values_list("name", flat=True))
+        raise serializers.ValidationError(
+            f"Invalid session. Valid sessions: {valid or '(none defined yet)'}"
+        )
+    return value
+
+
+class SessionSerializer(AuditFieldsMixin):
+    name = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Session
+        fields = [
+            "id",
+            "name",
+            "start_year",
+            "created_by_email",
+            "created_date",
+            "updated_by_email",
+            "updated_date",
+        ]
+        read_only_fields = ["created_date", "updated_date"]
+
+    def validate_start_year(self, value):
+        if not (2000 <= value <= 2100):
+            raise serializers.ValidationError("Start year must be between 2000 and 2100.")
+        return value
+
+    def validate(self, attrs):
+        start_year = attrs["start_year"]
+        attrs["name"] = f"{start_year} - {start_year + 2}"
+        dupe = Session.objects.exclude(
+            pk=self.instance.pk if self.instance else None
+        ).filter(start_year=start_year)
+        if dupe.exists():
+            raise serializers.ValidationError(f"Session {attrs['name']} already exists.")
+        return attrs
 
 
 class GradeSerializer(AuditFieldsMixin):
@@ -77,11 +116,7 @@ class ResultSerializer(AuditFieldsMixin):
         read_only_fields = ["created_date", "updated_date"]
 
     def validate_session(self, value):
-        if value not in session_choices():
-            raise serializers.ValidationError(
-                f"Invalid session. Valid sessions: {', '.join(session_choices())}"
-            )
-        return value
+        return validate_session_name(value)
 
     def validate_board(self, value):
         return value.strip().upper()
@@ -130,11 +165,7 @@ class UploadSerializer(serializers.Serializer):
     file = serializers.FileField()
 
     def validate_session(self, value):
-        if value not in session_choices():
-            raise serializers.ValidationError(
-                f"Invalid session. Valid sessions: {', '.join(session_choices())}"
-            )
-        return value
+        return validate_session_name(value)
 
     def validate_file(self, value):
         if not value.name.lower().endswith(".xlsx"):

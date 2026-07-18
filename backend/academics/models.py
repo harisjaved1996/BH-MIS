@@ -4,6 +4,17 @@ from django.db import models
 from core.models import AuditModel
 
 
+class Session(AuditModel):
+    name = models.CharField(max_length=11, unique=True)
+    start_year = models.PositiveIntegerField(unique=True)
+
+    class Meta:
+        ordering = ["start_year"]
+
+    def __str__(self):
+        return self.name
+
+
 class Grade(AuditModel):
     name = models.CharField(max_length=10, unique=True)
     min_percentage = models.DecimalField(max_digits=5, decimal_places=2)

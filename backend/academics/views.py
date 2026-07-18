@@ -5,9 +5,44 @@ from rest_framework.response import Response
 
 from core.mixins import AuditModelViewSet
 
-from .models import Grade, Result
-from .serializers import GradeSerializer, ResultSerializer, UploadSerializer
+from .models import Grade, Result, Session
+from .serializers import (
+    GradeSerializer,
+    ResultSerializer,
+    SessionSerializer,
+    UploadSerializer,
+)
 from .services.excel_import import import_results
+
+
+def multi_value_filter(qs, params, fields):
+    """Filter by comma-separated multi-select values, e.g. ?city=Karachi,Lahore."""
+    for field in fields:
+        raw = params.get(field)
+        if raw:
+            values = [v.strip() for v in raw.split(",") if v.strip()]
+            if values:
+                qs = qs.filter(**{f"{field}__in": values})
+    return qs
+
+
+class SessionViewSet(AuditModelViewSet):
+    queryset = Session.objects.all()
+    serializer_class = SessionSerializer
+    pagination_class = None
+
+    def destroy(self, request, *args, **kwargs):
+        session = self.get_object()
+        count = Result.objects.filter(session=session.name).count()
+        if count:
+            return Response(
+                {
+                    "detail": f"Cannot delete session {session.name}: "
+                    f"{count} results are linked to it."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().destroy(request, *args, **kwargs)
 
 
 class GradeViewSet(AuditModelViewSet):
@@ -20,12 +55,10 @@ class ResultViewSet(AuditModelViewSet):
     serializer_class = ResultSerializer
 
     def get_queryset(self):
-        qs = Result.objects.all()
         params = self.request.query_params
-        for field in ("city", "board", "session", "campus", "grade"):
-            value = params.get(field)
-            if value:
-                qs = qs.filter(**{f"{field}__iexact": value})
+        qs = multi_value_filter(
+            Result.objects.all(), params, ("city", "board", "session", "campus", "grade")
+        )
         search = params.get("search")
         if search:
             qs = qs.filter(student_name__icontains=search) | qs.filter(
@@ -53,3 +86,9 @@ class ResultViewSet(AuditModelViewSet):
         except ValueError as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(summary)
+
+    @action(detail=False, methods=["post"], url_path="delete-all")
+    def delete_all(self, request):
+        count = Result.objects.count()
+        Result.objects.all().delete()
+        return Response({"deleted": count})

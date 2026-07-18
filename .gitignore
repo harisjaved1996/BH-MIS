@@ -1,0 +1,30 @@
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+db.sqlite3
+db.sqlite3-journal
+*.log
+media/
+staticfiles/
+
+# --- Node / React ---
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+
+# --- npm cache (redirected to this folder because C: is full) ---
+.npm-cache/
+
+# --- Environment / secrets ---
+.env
+.env.*
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
