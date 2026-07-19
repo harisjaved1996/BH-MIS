@@ -1,103 +1,101 @@
 # Beaconhouse MIS — Setup Guide
 
-This guide explains **everything you need to run the Beaconhouse MIS on a Windows laptop,
-starting from zero** — no software installed, no technical background needed.
-Just follow the steps in order. Total time: about 20–30 minutes (mostly downloads).
+Welcome! This guide will help you run the Beaconhouse MIS on your laptop,
+**starting from zero** — nothing needs to be installed beforehand, and no technical
+knowledge is needed. Just follow the steps in order.
+
+The guide has two kinds of steps — pay attention to the labels:
+
+| Label | Meaning |
+|---|---|
+| ✅ **ONE-TIME SETUP** | Do these only once, the very first time. Never again. |
+| 🔁 **EVERY TIME** | Do these each time you want to use the application. |
+
+> **About your data:** The application starts completely **empty** — no student data
+> comes with it. You will add your own data by uploading Excel result sheets inside
+> the app. Everything you add is **saved permanently on your laptop**, even after you
+> close the application or restart the laptop. Only one login account is created for
+> you during setup, and you can change its email and password later from inside the app.
+
+**Total first-time setup: about 20–30 minutes (mostly waiting for downloads).**
+**Starting the app after that: about 1 minute.**
 
 ---
 
-## Part 1 — Install the required software (one time only)
+# ✅ ONE-TIME SETUP
 
-You need to install **two** free programs. Both are safe, official, and widely used.
+## Step 1 — Install Python
 
-### 1.1 Install Python (runs the application's server)
+Python is the engine that runs the application's server.
 
 1. Open your web browser and go to: **https://www.python.org/downloads/**
 2. Click the big yellow button **"Download Python 3.x.x"**.
 3. Open the downloaded file.
-4. **VERY IMPORTANT:** On the first screen of the installer, tick the checkbox at the
-   bottom that says **"Add python.exe to PATH"** — do this BEFORE clicking Install.
-5. Click **"Install Now"** and wait for it to finish, then click **Close**.
+4. ⚠️ **VERY IMPORTANT:** On the first screen, tick the checkbox at the bottom that says
+   **"Add python.exe to PATH"** — tick it BEFORE clicking Install.
+5. Click **"Install Now"**, wait for it to finish, click **Close**.
 
-**Check it worked:** Press the **Windows key**, type `cmd`, press Enter to open the
-black Command Prompt window, then type:
+**Check it worked:** Press the **Windows key** ⊞, type `cmd`, press **Enter**.
+A black window opens (this is called the *Command Prompt* — you'll use it a lot).
+Type this and press Enter:
 
 ```
 python --version
 ```
 
-You should see something like `Python 3.12.4`. If you see an error, restart the laptop
-and try again (or re-run the installer and make sure the PATH checkbox was ticked).
+✔️ You should see something like `Python 3.12.4`.
+❌ If you see an error, restart the laptop and check again.
 
-### 1.2 Install Node.js (runs the application's screens/UI)
+## Step 2 — Install Node.js
+
+Node.js runs the application's screens (the part you see in the browser).
 
 1. Go to: **https://nodejs.org/**
-2. Click the green **"LTS"** download button (LTS means the stable version).
-3. Open the downloaded file and click **Next** through all the steps
-   (the default options are fine), then **Finish**.
+2. Click the green **"LTS"** download button.
+3. Open the downloaded file, keep clicking **Next** (the default options are fine),
+   then **Finish**.
 
-**Check it worked:** Open a new Command Prompt (Windows key → type `cmd` → Enter) and type:
+**Check it worked:** Open a **new** Command Prompt (Windows key ⊞ → `cmd` → Enter) and type:
 
 ```
 node --version
 ```
 
-You should see something like `v22.x.x`.
+✔️ You should see something like `v22.x.x`.
 
----
-
-## Part 2 — Get the project onto the laptop
-
-Choose ONE of these two options.
-
-### Option A — Download as ZIP (easiest, no extra software)
+## Step 3 — Get the project folder
 
 1. Go to: **https://github.com/harisjaved1996/BH-MIS**
 2. Click the green **"<> Code"** button → click **"Download ZIP"**.
-3. Find the downloaded `BH-MIS-main.zip` in your Downloads folder.
-4. Right-click it → **"Extract All..."** → extract it to `C:\` (or anywhere you like).
-5. You now have a folder like `C:\BH-MIS-main`. That's the project folder —
-   the rest of this guide calls it **the project folder**.
+3. Open your **Downloads** folder and find `BH-MIS-main.zip`.
+4. Right-click it → **"Extract All..."** → choose `C:\` → click **Extract**.
+5. You now have the folder **`C:\BH-MIS-main`**. This is the project folder.
 
-### Option B — Using Git (if you prefer)
+## Step 4 — Prepare the application
 
-Install Git from https://git-scm.com/download/win (default options), then in a
-Command Prompt run:
+Open a Command Prompt (Windows key ⊞ → `cmd` → Enter) and type these commands
+**one at a time**, pressing **Enter** after each one. Wait for each command to finish
+before typing the next.
 
-```
-cd C:\
-git clone https://github.com/harisjaved1996/BH-MIS.git
-```
-
-The project folder is then `C:\BH-MIS`.
-
----
-
-## Part 3 — First-time setup (one time only)
-
-Open a Command Prompt (Windows key → `cmd` → Enter) and run these commands **one at a
-time**, pressing Enter after each. Replace `C:\BH-MIS-main` with your actual project
-folder if it's different.
-
-**Step 1 — Go to the project folder:**
+**4a. Go into the project folder:**
 
 ```
 cd C:\BH-MIS-main
 ```
 
-**Step 2 — Create the Python environment** (a private box for the app's Python tools):
+**4b. Create the app's private Python workspace:**
 
 ```
 python -m venv .venv
 ```
 
-**Step 3 — Install the server's requirements** (takes 1–2 minutes):
+**4c. Install the server's components** (takes 1–2 minutes):
 
 ```
 .venv\Scripts\pip install -r requirements.txt
 ```
 
-**Step 4 — Create the database** (also creates the login account and default grades/sessions):
+**4d. Create your empty database and your login account:**
 
 ```
 cd backend
@@ -105,7 +103,10 @@ cd backend
 cd ..
 ```
 
-**Step 5 — Install the UI's requirements** (takes 2–5 minutes, needs internet):
+> This creates a brand-new **empty** database on your laptop and sets up your login
+> account (see Step 5). It does NOT add any student data — that's yours to upload later.
+
+**4e. Install the screen components** (takes 2–5 minutes, needs internet):
 
 ```
 cd frontend
@@ -113,83 +114,118 @@ npm install
 cd ..
 ```
 
-Setup is done. You never need to repeat Part 1–3 again.
+🎉 **That's it — setup is finished forever.** You never repeat Steps 1–4 again.
+
+## Step 5 — Your login account
+
+Setup created one login account for you:
+
+| Email | Password |
+|---|---|
+| `haris@gmail.com` | `beaconhouse` |
+
+🔒 **After your first login, please change these:** click **"My Profile"** in the left
+menu — there you can set your own email and password. You can also create accounts for
+other people from the **"Admins"** page.
 
 ---
 
-## Part 4 — Starting the application (every time you want to use it)
+# 🔁 EVERY TIME — Starting the application
 
-The application has two parts that must both be running: the **server** and the **UI**.
-You need **two Command Prompt windows** open at the same time.
+The application has two halves — the **server** (brain) and the **UI** (screens) —
+and **both must be running at the same time**. That means you keep **two Command
+Prompt windows open** while using the app.
 
-### Window 1 — Start the server
+### Window 1 — start the server (brain)
 
-Open a Command Prompt and run:
+Open a Command Prompt (Windows key ⊞ → `cmd` → Enter) and type:
 
 ```
 cd C:\BH-MIS-main\backend
 ..\.venv\Scripts\python manage.py runserver
 ```
 
-Leave this window open. You'll see a message like
-`Starting development server at http://127.0.0.1:8000/`. That means it's running.
+✔️ When you see `Starting development server at http://127.0.0.1:8000/` — it's running.
+**Leave this window open. Don't close it. Minimize it if you like.**
 
-### Window 2 — Start the UI
+### Window 2 — start the UI (screens)
 
-Open a **second** Command Prompt (Windows key → `cmd` → Enter again) and run:
+Open a **second** Command Prompt (Windows key ⊞ → `cmd` → Enter again) and type:
 
 ```
 cd C:\BH-MIS-main\frontend
 npm run dev
 ```
 
-Leave this window open too. You'll see a message with `Local: http://localhost:5173/`.
+✔️ When you see `Local: http://localhost:5173/` — it's running.
+**Leave this window open too.**
 
-### Open the application
+### Open the app in your browser
 
-Open your web browser (Chrome/Edge) and go to:
+Open Chrome or Edge and go to:
 
-> **http://localhost:5173**
+> ## http://localhost:5173
 
-Log in with:
-
-| Email | Password |
-|---|---|
-| `haris@gmail.com` | `beaconhouse` |
-
-*(You can change this password from the "My Profile" page after logging in,
-and create more admin accounts from the "Admins" page.)*
-
-### Stopping the application
-
-Simply close both Command Prompt windows (or press `Ctrl + C` in each).
-Your data is saved automatically — it will still be there next time you start.
+Log in and start working. 🎉
 
 ---
 
-## Part 5 — Quick tour
+# 🔁 EVERY TIME — Closing the application
 
-- **Dashboard** — KPIs, charts and filter-based reports (session, city, board, campus,
-  grade, top/lowest students). All filters allow multiple selections.
-- **Results** — Click **"Add Result"** to upload an Excel result sheet: first pick the
-  session, then drop the `.xlsx` file. Percentage and grade are calculated automatically.
-  Duplicate students (same Roll No + Session + Board) are skipped, never overwritten.
-  A sample sheet `Results SSC II -H.xlsx` is included in the project folder for testing.
-- **Sessions** — Add the two-year academic sessions (e.g. 2028 → "2028 - 2030").
-- **Grades** — Define the percentage bands (e.g. 90–94.99% = A+). Defaults are included.
-- **Admins** — Add or manage admin panel users.
+When you're done, simply **close both black Command Prompt windows** (click the ✖,
+or press `Ctrl + C` inside each window).
+
+> 💾 **Your data is already saved.** Everything you added — results, sessions, grades,
+> admins — is stored in a file on your laptop (`backend\db.sqlite3`). Closing the app,
+> shutting down, or restarting the laptop will NOT lose anything. Next time you start
+> the app (two windows again), all your data will be exactly where you left it.
+
+> ⚠️ The only things that delete data: the **"Delete All"** button on the Results page,
+> deleting individual records yourself, or deleting the project folder / the
+> `db.sqlite3` file from the laptop. To make a backup, just copy the file
+> `C:\BH-MIS-main\backend\db.sqlite3` somewhere safe (e.g. a USB drive).
+
+---
+
+# Quick reference card
+
+**Every time you want to use the app — 3 things:**
+
+| # | Where | What to type / do |
+|---|---|---|
+| 1 | Command Prompt window 1 | `cd C:\BH-MIS-main\backend` then `..\.venv\Scripts\python manage.py runserver` |
+| 2 | Command Prompt window 2 | `cd C:\BH-MIS-main\frontend` then `npm run dev` |
+| 3 | Browser | open **http://localhost:5173** and log in |
+
+**To close:** close both black windows. Data stays saved.
+
+---
+
+# A quick tour of the app
+
+- **Dashboard** — charts, KPIs and reports. Filter by session, city, board, campus,
+  grade, top/lowest students. Every dropdown allows multiple selections.
+- **Results** — click **"Add Result"**, pick the session, and drop in your Excel result
+  sheet (`.xlsx`). Percentage and grade are calculated automatically. If a student
+  (same Roll No + Session + Board) is already in the system, that row is skipped —
+  existing data is never overwritten. A sample sheet `Results SSC II -H.xlsx` is
+  included in the project folder if you want to try an upload.
+- **Sessions** — add two-year academic sessions (enter 2028 → creates "2028 - 2030").
+- **Grades** — set the percentage bands (e.g. 90–94.99% = A+). Sensible defaults are
+  already there; you can edit them.
+- **Admins** — create logins for other people.
+- **My Profile** — change your own email and password.
 - The **sun/moon button** (top right) switches between dark and light theme.
 
 ---
 
-## Troubleshooting
+# If something goes wrong
 
 | Problem | Fix |
 |---|---|
-| `'python' is not recognized...` | Python wasn't added to PATH. Re-run the Python installer, choose "Modify", and enable "Add python to environment variables" — or reinstall with the PATH checkbox ticked. Then open a NEW Command Prompt. |
-| `'npm' is not recognized...` | Node.js isn't installed or the Command Prompt was open during installation. Install Node.js, then open a NEW Command Prompt. |
-| Browser shows "This site can't be reached" | One of the two windows isn't running. Make sure BOTH Command Prompt windows from Part 4 are open and showing their "running" messages. |
-| Login says "Invalid email or password" | Use exactly `haris@gmail.com` / `beaconhouse` (all lowercase, no spaces). |
-| Upload says "Sheet layout not recognized" | The Excel file must have the standard columns: Sr No, Roll No, Student Name, Campus, City, Board, Total Marks, Obtained Marks, Remarks (headers in the first few rows). |
-| `npm install` fails with a disk-space error | Free up space on the C: drive and try again. |
-| Something else | Close both windows, repeat Part 4. If it persists, send a screenshot of the Command Prompt error. |
+| `'python' is not recognized...` | Python wasn't added to PATH. Re-run the Python installer and make sure the **"Add python.exe to PATH"** box is ticked. Then open a NEW Command Prompt. |
+| `'npm' is not recognized...` | Install Node.js (Step 2), then open a NEW Command Prompt. |
+| Browser says "This site can't be reached" | One of the two black windows isn't running. Make sure BOTH windows are open and showing their "running" messages. |
+| Login not working | Type exactly `haris@gmail.com` and `beaconhouse` (all lowercase, no spaces) — or your own credentials if you changed them. |
+| Upload says "Sheet layout not recognized" | The Excel sheet must have these columns: Sr No, Roll No, Student Name, Campus, City, Board, Total Marks, Obtained Marks, Remarks. |
+| Anything else | Close both windows and start them again (the 🔁 EVERY TIME steps). If it persists, take a screenshot of the black window's message and send it to us. |
