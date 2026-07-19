@@ -216,55 +216,37 @@ or press `Ctrl + C` inside each window).
 
 ---
 
-# 📋 The Excel result sheet — required format
+# 📋 The Excel result sheet — required columns
 
-When you upload a result sheet, the app reads the columns **by their position**
-(column A, column B, column C...), so the order below must be followed exactly.
+Your Excel sheet (`.xlsx`) must have these columns, **in this order, left to right**:
+
+| # | Column Name | What you put in it |
+|---|---|---|
+| 1 | **Sr No.** | Row number (1, 2, 3...) |
+| 2 | **Student Board Roll No.** | The student's board roll number |
+| 3 | **Student's Name** | Full name of the student |
+| 4 | **Campus** | Campus name, e.g. `Bahadurabad Campus` |
+| 5 | **City** | e.g. `Karachi` |
+| 6 | **BOARD** | Board name, e.g. `BSEK` |
+| 7 | **Total Marks** | Whole number, e.g. `1100` |
+| 8 | **Obtained Marks** | Whole number, e.g. `925` |
+| 9 | **Remarks** | Any note (can be left empty) |
+
 The included sample file **`Results SSC II -H.xlsx`** already has this exact format —
-the easiest way to make your own sheet is to copy it and replace the data.
+the easiest way is to copy it and replace the data with your own.
 
-## Column layout (left to right)
+## What the system will do by itself — you do NOT put these in the sheet
 
-| Column | Heading (suggested) | What goes in it | Required? |
-|---|---|---|---|
-| **A** | Sr No. | Row number (1, 2, 3...) | Ignored by the app |
-| **B** | Student Board Roll No. | The student's board roll number | ✅ Required |
-| **C** | Student's Name | Full name | ✅ Required |
-| **D** | Campus | Campus name, e.g. `Bahadurabad Campus` | ✅ Required |
-| **E** | City | e.g. `Karachi` | ✅ Required |
-| **F** | BOARD | Board name, e.g. `BSEK` | ✅ Required |
-| **G** | Total Marks (9th+10th) | Whole number, e.g. `1100` | ✅ Required |
-| **H** | Obtained Marks (9th+10th) | Whole number, e.g. `925` | ✅ Required |
-| **I** | %age | Leave empty — **calculated by the app** | Ignored by the app |
-| **J** | Grade | Leave empty — **calculated by the app** | Ignored by the app |
-| **K** | Remarks | Any note (optional) | Optional |
-
-## Layout rules
-
-1. **Row 1** can be a title (e.g. "Consolidated Result SSC II") — that's fine.
-2. The **column headings row** must appear within the **first 5 rows**. The app finds
-   it automatically by looking for the word **"Roll"** in column B's heading and
-   **"Total"** in column G's heading — so keep those words in your headings.
-3. **Student data starts on the row right below the headings** — one student per row.
-4. The file must be a real Excel file ending in **`.xlsx`** (not `.xls`, not `.csv`).
-
-## What the app does for you automatically
-
-- **Percentage** = (Obtained Marks ÷ Total Marks) × 100 — you never type it.
-  Even if column I contains formulas, the app ignores them and calculates fresh.
-- **Grade** — looked up from your Grades module bands based on that percentage.
-- **Cleanup** — extra spaces are fixed automatically (e.g. `"Karachi "` → `"Karachi"`),
-  and board names are standardized to capital letters.
-
-## Rules that make a row fail (shown in the "Errors" tab after upload)
-
-- Missing Roll No or Student Name
-- Marks that aren't whole numbers, or Total Marks of 0
-- Obtained Marks bigger than Total Marks
-
-Failed rows are simply skipped and listed with their Excel row number and the reason —
-fix them in the Excel file and upload the same file again (already-inserted students
-will just be skipped, the fixed rows will be added).
+- **Percentage** — calculated as (Obtained Marks ÷ Total Marks) × 100.
+- **Grade** — assigned automatically from the percentage, using the bands you set
+  in the Grades module.
+- **Cleanup** — extra spaces are fixed (e.g. `"Karachi "` → `"Karachi"`) and board
+  names are standardized to capital letters.
+- **Duplicate protection** — if a student (same Roll No + Session + Board) is already
+  in the system, that row is skipped, never overwritten.
+- **Bad-row reporting** — rows with missing roll no/name, invalid marks, or obtained
+  marks greater than total are skipped and listed for you with the reason, so you can
+  fix and re-upload the same file safely.
 
 ---
 
