@@ -205,17 +205,113 @@ or press `Ctrl + C` inside each window).
 
 - **Dashboard** — charts, KPIs and reports. Filter by session, city, board, campus,
   grade, top/lowest students. Every dropdown allows multiple selections.
-- **Results** — click **"Add Result"**, pick the session, and drop in your Excel result
-  sheet (`.xlsx`). Percentage and grade are calculated automatically. If a student
-  (same Roll No + Session + Board) is already in the system, that row is skipped —
-  existing data is never overwritten. A sample sheet `Results SSC II -H.xlsx` is
-  included in the project folder if you want to try an upload.
-- **Sessions** — add two-year academic sessions (enter 2028 → creates "2028 - 2030").
+- **Results** — upload Excel result sheets and manage student records
+  (full guide below).
+- **Sessions** — the two-year academic sessions, e.g. "2024 - 2026" (full guide below).
 - **Grades** — set the percentage bands (e.g. 90–94.99% = A+). Sensible defaults are
   already there; you can edit them.
 - **Admins** — create logins for other people.
 - **My Profile** — change your own email and password.
 - The **sun/moon button** (top right) switches between dark and light theme.
+
+---
+
+# 📋 The Excel result sheet — required format
+
+When you upload a result sheet, the app reads the columns **by their position**
+(column A, column B, column C...), so the order below must be followed exactly.
+The included sample file **`Results SSC II -H.xlsx`** already has this exact format —
+the easiest way to make your own sheet is to copy it and replace the data.
+
+## Column layout (left to right)
+
+| Column | Heading (suggested) | What goes in it | Required? |
+|---|---|---|---|
+| **A** | Sr No. | Row number (1, 2, 3...) | Ignored by the app |
+| **B** | Student Board Roll No. | The student's board roll number | ✅ Required |
+| **C** | Student's Name | Full name | ✅ Required |
+| **D** | Campus | Campus name, e.g. `Bahadurabad Campus` | ✅ Required |
+| **E** | City | e.g. `Karachi` | ✅ Required |
+| **F** | BOARD | Board name, e.g. `BSEK` | ✅ Required |
+| **G** | Total Marks (9th+10th) | Whole number, e.g. `1100` | ✅ Required |
+| **H** | Obtained Marks (9th+10th) | Whole number, e.g. `925` | ✅ Required |
+| **I** | %age | Leave empty — **calculated by the app** | Ignored by the app |
+| **J** | Grade | Leave empty — **calculated by the app** | Ignored by the app |
+| **K** | Remarks | Any note (optional) | Optional |
+
+## Layout rules
+
+1. **Row 1** can be a title (e.g. "Consolidated Result SSC II") — that's fine.
+2. The **column headings row** must appear within the **first 5 rows**. The app finds
+   it automatically by looking for the word **"Roll"** in column B's heading and
+   **"Total"** in column G's heading — so keep those words in your headings.
+3. **Student data starts on the row right below the headings** — one student per row.
+4. The file must be a real Excel file ending in **`.xlsx`** (not `.xls`, not `.csv`).
+
+## What the app does for you automatically
+
+- **Percentage** = (Obtained Marks ÷ Total Marks) × 100 — you never type it.
+  Even if column I contains formulas, the app ignores them and calculates fresh.
+- **Grade** — looked up from your Grades module bands based on that percentage.
+- **Cleanup** — extra spaces are fixed automatically (e.g. `"Karachi "` → `"Karachi"`),
+  and board names are standardized to capital letters.
+
+## Rules that make a row fail (shown in the "Errors" tab after upload)
+
+- Missing Roll No or Student Name
+- Marks that aren't whole numbers, or Total Marks of 0
+- Obtained Marks bigger than Total Marks
+
+Failed rows are simply skipped and listed with their Excel row number and the reason —
+fix them in the Excel file and upload the same file again (already-inserted students
+will just be skipped, the fixed rows will be added).
+
+---
+
+# 📅 Sessions module — guide
+
+A **session** is a two-year academic period, like "2024 - 2026". Every result belongs
+to exactly one session — so **a session must exist before you can upload results for it**.
+
+- Three sessions come pre-created: `2022 - 2024`, `2024 - 2026`, `2026 - 2028`.
+- **To add one:** open **Sessions** in the left menu → click **"Add Session"** → type
+  only the **starting year** (e.g. `2028`) → the app names it `2028 - 2030` automatically.
+- Each session can exist only once — duplicates are rejected.
+- **Deleting:** a session that already has results uploaded against it **cannot be
+  deleted** (this protects your data). Empty sessions can be deleted freely.
+
+---
+
+# 📄 Results module — guide
+
+## Uploading a result sheet
+
+1. Open **Results** in the left menu → click **"Add Result"** (top right).
+2. **First select the Session** from the dropdown (see Sessions guide above).
+3. Then click or drag your **`.xlsx`** file into the box and press **Upload**.
+4. A summary appears with four numbers and three tabs:
+
+| Item | Meaning |
+|---|---|
+| **Inserted** | New students added to the database. |
+| **Skipped (duplicates)** | Rows NOT added because that student (same Roll No + Session + Board) is already in the system — existing data is never overwritten. The tab lists each one with the reason. |
+| **Ungraded** | Students that WERE added, but their percentage doesn't fall in any band in the Grades module — their grade shows "N/A" until you adjust the bands. |
+| **Errors** | Rows rejected because of bad data — the tab shows the Excel row number and exactly what's wrong. |
+
+**Safe to repeat:** uploading the same file twice does no harm — everything already
+in the system is skipped. The same student can appear again in a *different* session
+or under a *different* board; that's treated as a new record, which is correct.
+
+## Managing results
+
+- **Search & filter** — search by name/roll no; filter by session, city, board, campus,
+  grade (all support multiple selections).
+- **Edit** (pencil button) — change any field; percentage and grade are automatically
+  recalculated from the marks you enter.
+- **Delete** (red bin button) — removes one student's result (asks for confirmation).
+- **Delete All** (red button, top right) — wipes ALL results from the database after
+  a confirmation. Use this to clear test data before starting real work.
+  ⚠️ This cannot be undone.
 
 ---
 
